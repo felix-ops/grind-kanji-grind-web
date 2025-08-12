@@ -1,5 +1,21 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "KanjiStrokeOrders";
+  src: url("/fonts/KanjiStrokeOrders_v2.016.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap; /* Improves font loading performance */
+}
+
+@font-face {
+  font-family: "HGGyosho"; /* We use the name HGGyosho to match the component's CSS */
+  src: url("/fonts/YujiSyusyo-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
