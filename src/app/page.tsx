@@ -1,9 +1,9 @@
-import GrindKanjiWeb from "@/components/GrindKanjiWeb";
+import GrindKanjiGrind from "@/components/GrindKanjiWeb";
 
 export default function Home() {
   return (
     <main>
-      <GrindKanjiWeb />
+      <GrindKanjiGrind />
     </main>
   );
 }

@@ -46,7 +46,7 @@ const FONTS: Record<string, string> = {
 };
 
 // --- Main Component ---
-const GrindKanjiWeb = () => {
+const GrindKanjiGrind = () => {
   // Data State
   const [partedKanjis, setPartedKanjis] = useState<string[][][]>(
     Array(ALL_LEVELS.length).fill([])
@@ -563,4 +563,4 @@ const GrindKanjiWeb = () => {
   );
 };
 
-export default GrindKanjiWeb;
+export default GrindKanjiGrind;
