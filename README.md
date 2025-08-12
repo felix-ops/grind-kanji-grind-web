@@ -1,8 +1,8 @@
 # Grind Kanji Grind - Web
 
 An Interactive Quiz based tool for learning Kanji Meanings
+<img width="1497" height="1077" alt="image" src="https://github.com/user-attachments/assets/c8224a0c-460e-4599-a517-181a456b413d" />
 
-![image](https://github.com/felix-ops/Grind-Kanji-Grind/assets/54519066/5a3d34be-e667-4759-a8bf-7ac2899147c0)
 
 ## Getting Started
 
