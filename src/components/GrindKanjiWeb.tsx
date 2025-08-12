@@ -405,8 +405,7 @@ const GrindKanjiGrind = () => {
 
         /* Font Family Definitions */
         .font-default .kanji-button {
-          font-family: "MS PGothic", "Hiragino Kaku Gothic ProN", "Meiryo",
-            sans-serif;
+          font-family: sans-serif;
         }
         .font-mincho .kanji-button {
           font-family: "Yu Mincho", "YuMincho", serif;
