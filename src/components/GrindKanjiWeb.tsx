@@ -1,19 +1,6 @@
 "use client";
 
-import {
-  useState,
-  useEffect,
-  useCallback,
-  SetStateAction,
-  SetStateAction,
-  SetStateAction,
-  SetStateAction,
-  JSXElementConstructor,
-  Key,
-  ReactElement,
-  ReactNode,
-  ReactPortal,
-} from "react";
+import { useState, useEffect, useCallback } from "react";
 import Papa from "papaparse";
 import {
   FaArrowLeft,
@@ -26,9 +13,9 @@ import {
 // --- Configuration ---
 const PART_SIZE = 80;
 
-const CATEGORIES = {
+const CATEGORIES: Record<string, string[]> = {
   JLPT: ["JLPT N5", "JLPT N4", "JLPT N3", "JLPT N2", "JLPT N1"],
-  RTK: ["RTK 5th Edition", "RTK 6th Edition"],
+  RTK: ["5th Edition", "6th Edition"],
 };
 
 const ALL_LEVELS = [
@@ -37,8 +24,8 @@ const ALL_LEVELS = [
   "JLPT N3",
   "JLPT N2",
   "JLPT N1",
-  "RTK 5th Edition",
-  "RTK 6th Edition",
+  "5th Edition",
+  "6th Edition",
 ];
 
 const KANJI_FILE_PATHS = [
@@ -51,7 +38,7 @@ const KANJI_FILE_PATHS = [
   "/data/RTK_6ED.csv",
 ];
 
-const FONTS = {
+const FONTS: Record<string, string> = {
   default: "Default",
   mincho: "Mincho",
   gyong: "Yuji Syusyo",
@@ -61,10 +48,10 @@ const FONTS = {
 // --- Main Component ---
 const GrindKanjiWeb = () => {
   // Data State
-  const [partedKanjis, setPartedKanjis] = useState(
+  const [partedKanjis, setPartedKanjis] = useState<string[][][]>(
     Array(ALL_LEVELS.length).fill([])
   );
-  const [partedHints, setPartedHints] = useState(
+  const [partedHints, setPartedHints] = useState<string[][][]>(
     Array(ALL_LEVELS.length).fill([])
   );
 
@@ -72,36 +59,36 @@ const GrindKanjiWeb = () => {
   const [selectedCategory, setSelectedCategory] = useState("JLPT");
   const [selectedLevel, setSelectedLevel] = useState(CATEGORIES.JLPT[0]);
   const [selectedPart, setSelectedPart] = useState("Part 1");
-  const [parts, setParts] = useState([]);
-  const [selectedFont, setSelectedFont] = useState("gothic");
+  const [parts, setParts] = useState<string[]>([]);
+  const [selectedFont, setSelectedFont] = useState("default");
 
   // Deck & Display State
-  const [currentKanjiList, setCurrentKanjiList] = useState([]);
-  const [currentHintList, setCurrentHintList] = useState([]);
+  const [currentKanjiList, setCurrentKanjiList] = useState<string[]>([]);
+  const [currentHintList, setCurrentHintList] = useState<string[]>([]);
   const [currentHintPos, setCurrentHintPos] = useState(0);
 
   // Quiz State
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [timerValue, setTimerValue] = useState(900);
   const [score, setScore] = useState(0);
-  const [quizOrder, setQuizOrder] = useState([]);
-  const [solvedPositions, setSolvedPositions] = useState([]);
+  const [quizOrder, setQuizOrder] = useState<number[]>([]);
+  const [solvedPositions, setSolvedPositions] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   // --- Utility Functions ---
-  const partition = (list: string | any[], size: number) => {
-    const partitioned = [];
+  const partition = (list: string[], size: number): string[][] => {
+    const partitioned: string[][] = [];
     for (let i = 0; i < list.length; i += size) {
       partitioned.push(list.slice(i, i + size));
     }
     return partitioned;
   };
 
-  const calculateParts = (partedList: string | any[]) => {
+  const calculateParts = (partedList: string[][]): string[] => {
     return Array.from({ length: partedList.length }, (_, i) => `Part ${i + 1}`);
   };
 
-  const formatTime = (seconds: number) => {
+  const formatTime = (seconds: number): string => {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${minutes.toString().padStart(2, "0")}:${secs
@@ -113,15 +100,16 @@ const GrindKanjiWeb = () => {
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      const allPartedKanjis = [];
-      const allPartedHints = [];
+      const allPartedKanjis: string[][][] = [];
+      const allPartedHints: string[][][] = [];
       for (const path of KANJI_FILE_PATHS) {
         try {
           const response = await fetch(path);
           const csvText = await response.text();
-          const data = Papa.parse(csvText, { skipEmptyLines: true }).data;
-          const kanjis = data.map((row: any[]) => row[0]);
-          const hints = data.map((row: any[]) => row[1]);
+          const data = Papa.parse(csvText, { skipEmptyLines: true })
+            .data as string[][];
+          const kanjis = data.map((row: string[]) => row[0]);
+          const hints = data.map((row: string[]) => row[1]);
           allPartedKanjis.push(partition(kanjis, PART_SIZE));
           allPartedHints.push(partition(hints, PART_SIZE));
         } catch (error) {
@@ -160,17 +148,17 @@ const GrindKanjiWeb = () => {
   }, [selectedLevel, selectedPart, isLoading, updateDeck]);
 
   // --- Event Handlers ---
-  const handleCategoryChange = (category: SetStateAction<string>) => {
+  const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
     const newLevel = CATEGORIES[category][0];
     setSelectedLevel(newLevel);
     setSelectedPart("Part 1");
   };
-  const handleLevelChange = (level: SetStateAction<string>) => {
+  const handleLevelChange = (level: string) => {
     setSelectedLevel(level);
     setSelectedPart("Part 1");
   };
-  const handlePartChange = (part: SetStateAction<string>) => {
+  const handlePartChange = (part: string) => {
     setSelectedPart(part);
   };
   const shuffleDeck = () => {
@@ -202,9 +190,7 @@ const GrindKanjiWeb = () => {
     [currentHintList.length, isTimerRunning, quizOrder, solvedPositions]
   );
 
-  const characterButtonClicked = (
-    clickedKanjiIndex: SetStateAction<number>
-  ) => {
+  const characterButtonClicked = (clickedKanjiIndex: number) => {
     if (!isTimerRunning) {
       setCurrentHintPos(clickedKanjiIndex);
       return;
@@ -248,17 +234,19 @@ const GrindKanjiWeb = () => {
 
   // --- Effects ---
   useEffect(() => {
-    let interval: string | number | NodeJS.Timeout | undefined;
+    let interval: NodeJS.Timeout | undefined;
     if (isTimerRunning && timerValue > 0) {
       interval = setInterval(() => setTimerValue((prev) => prev - 1), 1000);
     } else if (timerValue === 0) {
       restartQuiz();
     }
-    return () => clearInterval(interval);
+    return () => {
+      if (interval) clearInterval(interval);
+    };
   }, [isTimerRunning, timerValue]);
 
   useEffect(() => {
-    const handleKeyDown = (event: { key: string }) => {
+    const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "ArrowLeft") handleNavArrow(-1);
       if (event.key === "ArrowRight") handleNavArrow(1);
     };
@@ -301,7 +289,7 @@ const GrindKanjiWeb = () => {
         }
         .controls {
           display: flex;
-          gap: 0.5rem;
+          gap: 0.2rem;
           flex-wrap: wrap;
           align-items: center;
           flex-grow: 1;
@@ -315,7 +303,7 @@ const GrindKanjiWeb = () => {
           background-color: #333;
           color: white;
           border: 1px solid #555;
-          padding: 0.3rem 1rem;
+          padding: 0.3rem 0.3rem;
           border-radius: 5px;
           font-size: clamp(0.8rem, 2vmin, 1rem);
           cursor: pointer;
@@ -336,6 +324,7 @@ const GrindKanjiWeb = () => {
         .timer {
           font-size: clamp(1.2rem, 2.5vmin, 1.25rem);
           font-family: "Courier New", monospace;
+          font-weight: bold;
         }
         .score {
           font-size: clamp(1rem, 2vmin, 1rem);
@@ -360,9 +349,12 @@ const GrindKanjiWeb = () => {
         .hint-text {
           font-size: clamp(1.2rem, 3vmin, 1.5rem);
           color: #eee;
-          min-height: 1.5em;
+          min-height: 3em; /* You can adjust this value */
           font-weight: 500;
           flex-grow: 1;
+          display: flex; /* Added for vertical alignment */
+          align-items: center; /* Vertically centers the text */
+          justify-content: center; /* Horizontally centers the text */
         }
         .grid-wrapper {
           flex-grow: 1;
@@ -412,7 +404,7 @@ const GrindKanjiWeb = () => {
         }
 
         /* Font Family Definitions */
-        .font-gothic .kanji-button {
+        .font-default .kanji-button {
           font-family: "MS PGothic", "Hiragino Kaku Gothic ProN", "Meiryo",
             sans-serif;
         }
@@ -464,35 +456,11 @@ const GrindKanjiWeb = () => {
               onChange={(e) => handleLevelChange(e.target.value)}
               disabled={isTimerRunning}
             >
-              {CATEGORIES[selectedCategory].map(
-                (
-                  level:
-                    | boolean
-                    | Key
-                    | ReactElement<unknown, string | JSXElementConstructor<any>>
-                    | Iterable<ReactNode>
-                    | Promise<
-                        | string
-                        | number
-                        | bigint
-                        | boolean
-                        | ReactPortal
-                        | ReactElement<
-                            unknown,
-                            string | JSXElementConstructor<any>
-                          >
-                        | Iterable<ReactNode>
-                        | null
-                        | undefined
-                      >
-                    | null
-                    | undefined
-                ) => (
-                  <option key={level} value={level}>
-                    {level}
-                  </option>
-                )
-              )}
+              {CATEGORIES[selectedCategory].map((level: string) => (
+                <option key={level} value={level}>
+                  {level}
+                </option>
+              ))}
             </select>
             <select
               className="select-style"
@@ -529,7 +497,9 @@ const GrindKanjiWeb = () => {
           </div>
           <div className="quiz-controls">
             <div className="score">
-              {isTimerRunning ? `${score} / ${currentHintList.length}` : ""}
+              {isTimerRunning
+                ? `${score} / ${currentHintList.length}`
+                : "- / -"}
             </div>
             <div className="timer">{formatTime(timerValue)}</div>
             {!isTimerRunning ? (

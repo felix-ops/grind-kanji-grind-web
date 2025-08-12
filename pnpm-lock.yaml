@@ -31,6 +31,9 @@ devDependencies:
   '@types/node':
     specifier: ^20
     version: 20.19.10
+  '@types/papaparse':
+    specifier: ^5.3.16
+    version: 5.3.16
   '@types/react':
     specifier: ^19
     version: 19.1.10
@@ -742,6 +745,12 @@ packages:
     resolution: {integrity: sha512-iAFpG6DokED3roLSP0K+ybeDdIX6Bc0Vd3mLW5uDqThPWtNos3E+EqOM11mPQHKzfWHqEBuLjIlsBQQ8CsISmQ==}
     dependencies:
       undici-types: 6.21.0
+    dev: true
+
+  /@types/papaparse@5.3.16:
+    resolution: {integrity: sha512-T3VuKMC2H0lgsjI9buTB3uuKj3EMD2eap1MOuEQuBQ44EnDx/IkGhU6EwiTf9zG3za4SKlmwKAImdDKdNnCsXg==}
+    dependencies:
+      '@types/node': 20.19.10
     dev: true
 
   /@types/react-dom@19.1.7(@types/react@19.1.10):
