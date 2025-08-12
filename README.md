@@ -1,4 +1,8 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Grind Kanji Grind - Web
+
+An Interactive Quiz based tool for learning Kanji Meanings
+
+![image](https://github.com/felix-ops/Grind-Kanji-Grind/assets/54519066/5a3d34be-e667-4759-a8bf-7ac2899147c0)
 
 ## Getting Started
 
