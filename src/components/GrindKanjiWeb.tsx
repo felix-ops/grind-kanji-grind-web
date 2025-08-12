@@ -1,6 +1,19 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import {
+  useState,
+  useEffect,
+  useCallback,
+  SetStateAction,
+  SetStateAction,
+  SetStateAction,
+  SetStateAction,
+  JSXElementConstructor,
+  Key,
+  ReactElement,
+  ReactNode,
+  ReactPortal,
+} from "react";
 import Papa from "papaparse";
 import {
   FaArrowLeft,
@@ -39,9 +52,9 @@ const KANJI_FILE_PATHS = [
 ];
 
 const FONTS = {
-  gothic: "Gothic",
+  default: "Default",
   mincho: "Mincho",
-  gyosho: "Gyosho (Cursive)",
+  gyong: "Yuji Syusyo",
   strokeOrder: "Stroke Order",
 };
 
@@ -76,7 +89,7 @@ const GrindKanjiWeb = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   // --- Utility Functions ---
-  const partition = (list, size) => {
+  const partition = (list: string | any[], size: number) => {
     const partitioned = [];
     for (let i = 0; i < list.length; i += size) {
       partitioned.push(list.slice(i, i + size));
@@ -84,11 +97,11 @@ const GrindKanjiWeb = () => {
     return partitioned;
   };
 
-  const calculateParts = (partedList) => {
+  const calculateParts = (partedList: string | any[]) => {
     return Array.from({ length: partedList.length }, (_, i) => `Part ${i + 1}`);
   };
 
-  const formatTime = (seconds) => {
+  const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${minutes.toString().padStart(2, "0")}:${secs
@@ -107,8 +120,8 @@ const GrindKanjiWeb = () => {
           const response = await fetch(path);
           const csvText = await response.text();
           const data = Papa.parse(csvText, { skipEmptyLines: true }).data;
-          const kanjis = data.map((row) => row[0]);
-          const hints = data.map((row) => row[1]);
+          const kanjis = data.map((row: any[]) => row[0]);
+          const hints = data.map((row: any[]) => row[1]);
           allPartedKanjis.push(partition(kanjis, PART_SIZE));
           allPartedHints.push(partition(hints, PART_SIZE));
         } catch (error) {
@@ -126,7 +139,7 @@ const GrindKanjiWeb = () => {
 
   // --- Deck Update Logic ---
   const updateDeck = useCallback(
-    (level, part) => {
+    (level: string, part: string) => {
       const levelIndex = ALL_LEVELS.indexOf(level);
       const partIndex = parseInt(part.replace("Part ", "")) - 1;
       if (partedKanjis[levelIndex] && partedKanjis[levelIndex][partIndex]) {
@@ -147,17 +160,17 @@ const GrindKanjiWeb = () => {
   }, [selectedLevel, selectedPart, isLoading, updateDeck]);
 
   // --- Event Handlers ---
-  const handleCategoryChange = (category) => {
+  const handleCategoryChange = (category: SetStateAction<string>) => {
     setSelectedCategory(category);
     const newLevel = CATEGORIES[category][0];
     setSelectedLevel(newLevel);
     setSelectedPart("Part 1");
   };
-  const handleLevelChange = (level) => {
+  const handleLevelChange = (level: SetStateAction<string>) => {
     setSelectedLevel(level);
     setSelectedPart("Part 1");
   };
-  const handlePartChange = (part) => {
+  const handlePartChange = (part: SetStateAction<string>) => {
     setSelectedPart(part);
   };
   const shuffleDeck = () => {
@@ -170,7 +183,7 @@ const GrindKanjiWeb = () => {
     setCurrentHintList(merged.map((item) => item[1]));
   };
   const handleNavArrow = useCallback(
-    (direction) => {
+    (direction: number) => {
       const len = currentHintList.length;
       if (len === 0) return;
       setCurrentHintPos((prev) => {
@@ -189,7 +202,9 @@ const GrindKanjiWeb = () => {
     [currentHintList.length, isTimerRunning, quizOrder, solvedPositions]
   );
 
-  const characterButtonClicked = (clickedKanjiIndex) => {
+  const characterButtonClicked = (
+    clickedKanjiIndex: SetStateAction<number>
+  ) => {
     if (!isTimerRunning) {
       setCurrentHintPos(clickedKanjiIndex);
       return;
@@ -233,7 +248,7 @@ const GrindKanjiWeb = () => {
 
   // --- Effects ---
   useEffect(() => {
-    let interval;
+    let interval: string | number | NodeJS.Timeout | undefined;
     if (isTimerRunning && timerValue > 0) {
       interval = setInterval(() => setTimerValue((prev) => prev - 1), 1000);
     } else if (timerValue === 0) {
@@ -243,7 +258,7 @@ const GrindKanjiWeb = () => {
   }, [isTimerRunning, timerValue]);
 
   useEffect(() => {
-    const handleKeyDown = (event) => {
+    const handleKeyDown = (event: { key: string }) => {
       if (event.key === "ArrowLeft") handleNavArrow(-1);
       if (event.key === "ArrowRight") handleNavArrow(1);
     };
@@ -363,7 +378,7 @@ const GrindKanjiWeb = () => {
         .kanji-button {
           width: 100%;
           height: 100%;
-          font-size: 5vmin;
+          font-size: 5.5vmin;
           background-color: #2c2c2c;
           border: 1px solid #444;
           color: #ffffff;
@@ -404,8 +419,8 @@ const GrindKanjiWeb = () => {
         .font-mincho .kanji-button {
           font-family: "Yu Mincho", "YuMincho", serif;
         }
-        .font-gyosho .kanji-button {
-          font-family: "HGGyosho", "Yu Kyokasho", cursive;
+        .font-gyong .kanji-button {
+          font-family: "HKgyong", "Yu Kyokasho", cursive;
         }
         .font-strokeOrder .kanji-button {
           font-family: "KanjiStrokeOrders", sans-serif;
@@ -449,11 +464,35 @@ const GrindKanjiWeb = () => {
               onChange={(e) => handleLevelChange(e.target.value)}
               disabled={isTimerRunning}
             >
-              {CATEGORIES[selectedCategory].map((level) => (
-                <option key={level} value={level}>
-                  {level}
-                </option>
-              ))}
+              {CATEGORIES[selectedCategory].map(
+                (
+                  level:
+                    | boolean
+                    | Key
+                    | ReactElement<unknown, string | JSXElementConstructor<any>>
+                    | Iterable<ReactNode>
+                    | Promise<
+                        | string
+                        | number
+                        | bigint
+                        | boolean
+                        | ReactPortal
+                        | ReactElement<
+                            unknown,
+                            string | JSXElementConstructor<any>
+                          >
+                        | Iterable<ReactNode>
+                        | null
+                        | undefined
+                      >
+                    | null
+                    | undefined
+                ) => (
+                  <option key={level} value={level}>
+                    {level}
+                  </option>
+                )
+              )}
             </select>
             <select
               className="select-style"
