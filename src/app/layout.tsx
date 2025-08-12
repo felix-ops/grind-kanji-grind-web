@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://grind-kanji-grind.netlify.app/"),
-  title: "Grind Kanji Grind",
+  metadataBase: new URL("https://kanjigrind.netlify.app/"),
+  title: "Kanji Grind",
   description: "Kanji Recognition quiz app",
   keywords: [
     "Kanji",
@@ -26,15 +26,15 @@ export const metadata: Metadata = {
   ],
   authors: [
     {
-      name: "Grind Kanji Grind",
+      name: "Kanji Grind",
       url: "https://bhuvanesh-personal.netlify.app/",
     },
   ],
   openGraph: {
-    title: "Grind Kanji Grind",
+    title: "Kanji Grind",
     description: "Kanji Recognition quiz app",
-    url: "https://grind-kanji-grind.netlify.app/",
-    siteName: "Grind Kanji Grind",
+    url: "https://kanjigrind.netlify.app/",
+    siteName: "Kanji Grind",
     images: [
       {
         url: "/logos/logo.ico", // or a full URL
