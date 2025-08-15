@@ -11,11 +11,13 @@ import {
 import { kanjiData, KanjiEntry } from "@/data/kanjiData";
 
 // --- Configuration ---
-const PART_SIZE = 80;
+const KANJI_PART_SIZE = 80;
+const KANA_PART_SIZE = 71; // All kana fit in one part
 
 const CATEGORIES: Record<string, string[]> = {
   JLPT: ["JLPT N5", "JLPT N4", "JLPT N3", "JLPT N2", "JLPT N1"],
   RTK: ["5th Edition", "6th Edition"],
+  KANA: ["Hiragana", "Katakana"],
 };
 
 const ALL_LEVELS = [
@@ -26,6 +28,8 @@ const ALL_LEVELS = [
   "JLPT N1",
   "5th Edition",
   "6th Edition",
+  "Hiragana",
+  "Katakana",
 ];
 
 const KANJI_DATA_KEYS = [
@@ -36,6 +40,8 @@ const KANJI_DATA_KEYS = [
   "JLPT_N1",
   "RTK_5ED",
   "RTK_6ED",
+  "KANA_HIRAGANA",
+  "KANA_KATAKANA",
 ];
 
 const FONTS: Record<string, string> = {
@@ -114,15 +120,21 @@ const GrindKanjiGrind = () => {
       const allPartedKanjis: string[][][] = [];
       const allPartedHints: string[][][] = [];
 
-      for (const key of KANJI_DATA_KEYS) {
+      for (let i = 0; i < KANJI_DATA_KEYS.length; i++) {
+        const key = KANJI_DATA_KEYS[i];
         try {
           const data: KanjiEntry[] = kanjiData[key as keyof typeof kanjiData];
 
           // Extract kanji and meanings from data structure
           const kanjis = data.map((item: KanjiEntry) => item.kanji);
           const hints = data.map((item: KanjiEntry) => item.meaning);
-          allPartedKanjis.push(partition(kanjis, PART_SIZE));
-          allPartedHints.push(partition(hints, PART_SIZE));
+
+          // Use different part sizes for kanji vs kana
+          const partSize = key.startsWith("KANA_")
+            ? KANA_PART_SIZE
+            : KANJI_PART_SIZE;
+          allPartedKanjis.push(partition(kanjis, partSize));
+          allPartedHints.push(partition(hints, partSize));
         } catch (error) {
           console.error(`Failed to process ${key}:`, error);
           allPartedKanjis.push([]);
@@ -391,7 +403,7 @@ const GrindKanjiGrind = () => {
           background-color: #444;
         }
         .timer {
-          font-size: clamp(1.2rem, 2.5vmin, 1.25rem);
+          font-size: clamp(1.7rem, 2.5vmin, 1.25rem);
           font-family: "Courier New", monospace;
           font-weight: bold;
         }

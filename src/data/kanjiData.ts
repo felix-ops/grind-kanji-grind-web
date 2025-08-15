@@ -11,6 +11,8 @@ export interface KanjiData {
   JLPT_N1: KanjiEntry[];
   RTK_5ED: KanjiEntry[];
   RTK_6ED: KanjiEntry[];
+  KANA_HIRAGANA: KanjiEntry[];
+  KANA_KATAKANA: KanjiEntry[];
 }
 
 export const kanjiData: KanjiData = {
@@ -28381,6 +28383,578 @@ export const kanjiData: KanjiData = {
     {
       kanji: "鏑",
       meaning: "",
+    },
+  ],
+  KANA_HIRAGANA: [
+    {
+      kanji: "あ",
+      meaning: "a",
+    },
+    {
+      kanji: "い",
+      meaning: "i",
+    },
+    {
+      kanji: "う",
+      meaning: "u",
+    },
+    {
+      kanji: "え",
+      meaning: "e",
+    },
+    {
+      kanji: "お",
+      meaning: "o",
+    },
+    {
+      kanji: "か",
+      meaning: "ka",
+    },
+    {
+      kanji: "き",
+      meaning: "ki",
+    },
+    {
+      kanji: "く",
+      meaning: "ku",
+    },
+    {
+      kanji: "け",
+      meaning: "ke",
+    },
+    {
+      kanji: "こ",
+      meaning: "ko",
+    },
+    {
+      kanji: "さ",
+      meaning: "sa",
+    },
+    {
+      kanji: "し",
+      meaning: "shi",
+    },
+    {
+      kanji: "す",
+      meaning: "su",
+    },
+    {
+      kanji: "せ",
+      meaning: "se",
+    },
+    {
+      kanji: "そ",
+      meaning: "so",
+    },
+    {
+      kanji: "た",
+      meaning: "ta",
+    },
+    {
+      kanji: "ち",
+      meaning: "chi",
+    },
+    {
+      kanji: "つ",
+      meaning: "tsu",
+    },
+    {
+      kanji: "て",
+      meaning: "te",
+    },
+    {
+      kanji: "と",
+      meaning: "to",
+    },
+    {
+      kanji: "な",
+      meaning: "na",
+    },
+    {
+      kanji: "に",
+      meaning: "ni",
+    },
+    {
+      kanji: "ぬ",
+      meaning: "nu",
+    },
+    {
+      kanji: "ね",
+      meaning: "ne",
+    },
+    {
+      kanji: "の",
+      meaning: "no",
+    },
+    {
+      kanji: "は",
+      meaning: "ha",
+    },
+    {
+      kanji: "ひ",
+      meaning: "hi",
+    },
+    {
+      kanji: "ふ",
+      meaning: "fu",
+    },
+    {
+      kanji: "へ",
+      meaning: "he",
+    },
+    {
+      kanji: "ほ",
+      meaning: "ho",
+    },
+    {
+      kanji: "ま",
+      meaning: "ma",
+    },
+    {
+      kanji: "み",
+      meaning: "mi",
+    },
+    {
+      kanji: "む",
+      meaning: "mu",
+    },
+    {
+      kanji: "め",
+      meaning: "me",
+    },
+    {
+      kanji: "も",
+      meaning: "mo",
+    },
+    {
+      kanji: "や",
+      meaning: "ya",
+    },
+    {
+      kanji: "ゆ",
+      meaning: "yu",
+    },
+    {
+      kanji: "よ",
+      meaning: "yo",
+    },
+    {
+      kanji: "ら",
+      meaning: "ra",
+    },
+    {
+      kanji: "り",
+      meaning: "ri",
+    },
+    {
+      kanji: "る",
+      meaning: "ru",
+    },
+    {
+      kanji: "れ",
+      meaning: "re",
+    },
+    {
+      kanji: "ろ",
+      meaning: "ro",
+    },
+    {
+      kanji: "わ",
+      meaning: "wa",
+    },
+    {
+      kanji: "を",
+      meaning: "wo",
+    },
+    {
+      kanji: "ん",
+      meaning: "n",
+    },
+    {
+      kanji: "が",
+      meaning: "ga",
+    },
+    {
+      kanji: "ぎ",
+      meaning: "gi",
+    },
+    {
+      kanji: "ぐ",
+      meaning: "gu",
+    },
+    {
+      kanji: "げ",
+      meaning: "ge",
+    },
+    {
+      kanji: "ご",
+      meaning: "go",
+    },
+    {
+      kanji: "ざ",
+      meaning: "za",
+    },
+    {
+      kanji: "じ",
+      meaning: "ji",
+    },
+    {
+      kanji: "ず",
+      meaning: "zu",
+    },
+    {
+      kanji: "ぜ",
+      meaning: "ze",
+    },
+    {
+      kanji: "ぞ",
+      meaning: "zo",
+    },
+    {
+      kanji: "だ",
+      meaning: "da",
+    },
+    {
+      kanji: "ぢ",
+      meaning: "ji",
+    },
+    {
+      kanji: "づ",
+      meaning: "zu",
+    },
+    {
+      kanji: "で",
+      meaning: "de",
+    },
+    {
+      kanji: "ど",
+      meaning: "do",
+    },
+    {
+      kanji: "ば",
+      meaning: "ba",
+    },
+    {
+      kanji: "び",
+      meaning: "bi",
+    },
+    {
+      kanji: "ぶ",
+      meaning: "bu",
+    },
+    {
+      kanji: "べ",
+      meaning: "be",
+    },
+    {
+      kanji: "ぼ",
+      meaning: "bo",
+    },
+    {
+      kanji: "ぱ",
+      meaning: "pa",
+    },
+    {
+      kanji: "ぴ",
+      meaning: "pi",
+    },
+    {
+      kanji: "ぷ",
+      meaning: "pu",
+    },
+    {
+      kanji: "ぺ",
+      meaning: "pe",
+    },
+    {
+      kanji: "ぽ",
+      meaning: "po",
+    },
+  ],
+  KANA_KATAKANA: [
+    {
+      kanji: "ア",
+      meaning: "a",
+    },
+    {
+      kanji: "イ",
+      meaning: "i",
+    },
+    {
+      kanji: "ウ",
+      meaning: "u",
+    },
+    {
+      kanji: "エ",
+      meaning: "e",
+    },
+    {
+      kanji: "オ",
+      meaning: "o",
+    },
+    {
+      kanji: "カ",
+      meaning: "ka",
+    },
+    {
+      kanji: "キ",
+      meaning: "ki",
+    },
+    {
+      kanji: "ク",
+      meaning: "ku",
+    },
+    {
+      kanji: "ケ",
+      meaning: "ke",
+    },
+    {
+      kanji: "コ",
+      meaning: "ko",
+    },
+    {
+      kanji: "サ",
+      meaning: "sa",
+    },
+    {
+      kanji: "シ",
+      meaning: "shi",
+    },
+    {
+      kanji: "ス",
+      meaning: "su",
+    },
+    {
+      kanji: "セ",
+      meaning: "se",
+    },
+    {
+      kanji: "ソ",
+      meaning: "so",
+    },
+    {
+      kanji: "タ",
+      meaning: "ta",
+    },
+    {
+      kanji: "チ",
+      meaning: "chi",
+    },
+    {
+      kanji: "ツ",
+      meaning: "tsu",
+    },
+    {
+      kanji: "テ",
+      meaning: "te",
+    },
+    {
+      kanji: "ト",
+      meaning: "to",
+    },
+    {
+      kanji: "ナ",
+      meaning: "na",
+    },
+    {
+      kanji: "ニ",
+      meaning: "ni",
+    },
+    {
+      kanji: "ヌ",
+      meaning: "nu",
+    },
+    {
+      kanji: "ネ",
+      meaning: "ne",
+    },
+    {
+      kanji: "ノ",
+      meaning: "no",
+    },
+    {
+      kanji: "ハ",
+      meaning: "ha",
+    },
+    {
+      kanji: "ヒ",
+      meaning: "hi",
+    },
+    {
+      kanji: "フ",
+      meaning: "fu",
+    },
+    {
+      kanji: "ヘ",
+      meaning: "he",
+    },
+    {
+      kanji: "ホ",
+      meaning: "ho",
+    },
+    {
+      kanji: "マ",
+      meaning: "ma",
+    },
+    {
+      kanji: "ミ",
+      meaning: "mi",
+    },
+    {
+      kanji: "ム",
+      meaning: "mu",
+    },
+    {
+      kanji: "メ",
+      meaning: "me",
+    },
+    {
+      kanji: "モ",
+      meaning: "mo",
+    },
+    {
+      kanji: "ヤ",
+      meaning: "ya",
+    },
+    {
+      kanji: "ユ",
+      meaning: "yu",
+    },
+    {
+      kanji: "ヨ",
+      meaning: "yo",
+    },
+    {
+      kanji: "ラ",
+      meaning: "ra",
+    },
+    {
+      kanji: "リ",
+      meaning: "ri",
+    },
+    {
+      kanji: "ル",
+      meaning: "ru",
+    },
+    {
+      kanji: "レ",
+      meaning: "re",
+    },
+    {
+      kanji: "ロ",
+      meaning: "ro",
+    },
+    {
+      kanji: "ワ",
+      meaning: "wa",
+    },
+    {
+      kanji: "ヲ",
+      meaning: "wo",
+    },
+    {
+      kanji: "ン",
+      meaning: "n",
+    },
+    {
+      kanji: "ガ",
+      meaning: "ga",
+    },
+    {
+      kanji: "ギ",
+      meaning: "gi",
+    },
+    {
+      kanji: "グ",
+      meaning: "gu",
+    },
+    {
+      kanji: "ゲ",
+      meaning: "ge",
+    },
+    {
+      kanji: "ゴ",
+      meaning: "go",
+    },
+    {
+      kanji: "ザ",
+      meaning: "za",
+    },
+    {
+      kanji: "ジ",
+      meaning: "ji",
+    },
+    {
+      kanji: "ズ",
+      meaning: "zu",
+    },
+    {
+      kanji: "ゼ",
+      meaning: "ze",
+    },
+    {
+      kanji: "ゾ",
+      meaning: "zo",
+    },
+    {
+      kanji: "ダ",
+      meaning: "da",
+    },
+    {
+      kanji: "ヂ",
+      meaning: "ji",
+    },
+    {
+      kanji: "ヅ",
+      meaning: "zu",
+    },
+    {
+      kanji: "デ",
+      meaning: "de",
+    },
+    {
+      kanji: "ド",
+      meaning: "do",
+    },
+    {
+      kanji: "バ",
+      meaning: "ba",
+    },
+    {
+      kanji: "ビ",
+      meaning: "bi",
+    },
+    {
+      kanji: "ブ",
+      meaning: "bu",
+    },
+    {
+      kanji: "ベ",
+      meaning: "be",
+    },
+    {
+      kanji: "ボ",
+      meaning: "bo",
+    },
+    {
+      kanji: "パ",
+      meaning: "pa",
+    },
+    {
+      kanji: "ピ",
+      meaning: "pi",
+    },
+    {
+      kanji: "プ",
+      meaning: "pu",
+    },
+    {
+      kanji: "ペ",
+      meaning: "pe",
+    },
+    {
+      kanji: "ポ",
+      meaning: "po",
     },
   ],
 };
