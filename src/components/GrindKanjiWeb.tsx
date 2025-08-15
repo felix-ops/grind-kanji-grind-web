@@ -491,7 +491,12 @@ const GrindKanjiGrind = () => {
 
         /* Font Family Definitions */
         .font-default .kanji-button {
-          font-family: sans-serif;
+          font-family: 
+            /* Windows */ "Yu Gothic", "Meiryo", "MS PGothic",
+            /* macOS */ "Hiragino Kaku Gothic ProN", "Hiragino Sans",
+            /* Android */ "Noto Sans CJK JP", "Roboto",
+            /* Linux */ "Noto Sans Japanese", "TakaoGothic", "VL Gothic",
+            sans-serif;
         }
         .font-mincho .kanji-button {
           font-family: "Yu Mincho", "YuMincho", serif;
