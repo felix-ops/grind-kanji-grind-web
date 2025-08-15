@@ -8,9 +8,6 @@ dependencies:
   next:
     specifier: 15.4.6
     version: 15.4.6(react-dom@19.1.0)(react@19.1.0)
-  papaparse:
-    specifier: ^5.5.3
-    version: 5.5.3
   react:
     specifier: 19.1.0
     version: 19.1.0
@@ -31,9 +28,6 @@ devDependencies:
   '@types/node':
     specifier: ^20
     version: 20.19.10
-  '@types/papaparse':
-    specifier: ^5.3.16
-    version: 5.3.16
   '@types/react':
     specifier: ^19
     version: 19.1.10
@@ -745,12 +739,6 @@ packages:
     resolution: {integrity: sha512-iAFpG6DokED3roLSP0K+ybeDdIX6Bc0Vd3mLW5uDqThPWtNos3E+EqOM11mPQHKzfWHqEBuLjIlsBQQ8CsISmQ==}
     dependencies:
       undici-types: 6.21.0
-    dev: true
-
-  /@types/papaparse@5.3.16:
-    resolution: {integrity: sha512-T3VuKMC2H0lgsjI9buTB3uuKj3EMD2eap1MOuEQuBQ44EnDx/IkGhU6EwiTf9zG3za4SKlmwKAImdDKdNnCsXg==}
-    dependencies:
-      '@types/node': 20.19.10
     dev: true
 
   /@types/react-dom@19.1.7(@types/react@19.1.10):
@@ -2764,10 +2752,6 @@ packages:
     dependencies:
       p-limit: 3.1.0
     dev: true
-
-  /papaparse@5.5.3:
-    resolution: {integrity: sha512-5QvjGxYVjxO59MGU2lHVYpRWBBtKHnlIAcSe1uNFCkkptUh63NFRj0FJQm7nR67puEruUci/ZkjmEFrjCAyP4A==}
-    dev: false
 
   /parent-module@1.0.1:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}

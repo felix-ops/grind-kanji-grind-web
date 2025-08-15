@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Papa from "papaparse";
 import {
   FaArrowLeft,
   FaArrowRight,
@@ -9,6 +8,7 @@ import {
   FaPlay,
   FaRedo,
 } from "react-icons/fa";
+import { kanjiData, KanjiEntry } from "@/data/kanjiData";
 
 // --- Configuration ---
 const PART_SIZE = 80;
@@ -28,14 +28,14 @@ const ALL_LEVELS = [
   "6th Edition",
 ];
 
-const KANJI_FILE_PATHS = [
-  "/data/JLPT_N5.csv",
-  "/data/JLPT_N4.csv",
-  "/data/JLPT_N3.csv",
-  "/data/JLPT_N2.csv",
-  "/data/JLPT_N1.csv",
-  "/data/RTK_5ED.csv",
-  "/data/RTK_6ED.csv",
+const KANJI_DATA_KEYS = [
+  "JLPT_N5",
+  "JLPT_N4",
+  "JLPT_N3",
+  "JLPT_N2",
+  "JLPT_N1",
+  "RTK_5ED",
+  "RTK_6ED",
 ];
 
 const FONTS: Record<string, string> = {
@@ -43,6 +43,11 @@ const FONTS: Record<string, string> = {
   mincho: "Mincho",
   gyong: "Yuji Syusyo",
   strokeOrder: "Stroke Order",
+};
+
+const MODES = {
+  timer: "Timer Mode",
+  review: "Review Mode",
 };
 
 // --- Main Component ---
@@ -61,6 +66,7 @@ const GrindKanjiGrind = () => {
   const [selectedPart, setSelectedPart] = useState("Part 1");
   const [parts, setParts] = useState<string[]>([]);
   const [selectedFont, setSelectedFont] = useState("default");
+  const [selectedMode, setSelectedMode] = useState("timer");
 
   // Deck & Display State
   const [currentKanjiList, setCurrentKanjiList] = useState<string[]>([]);
@@ -74,6 +80,11 @@ const GrindKanjiGrind = () => {
   const [quizOrder, setQuizOrder] = useState<number[]>([]);
   const [solvedPositions, setSolvedPositions] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Review Mode State
+  const [buttonStates, setButtonStates] = useState<
+    Record<number, "default" | "green" | "red">
+  >({});
 
   // --- Utility Functions ---
   const partition = (list: string[], size: number): string[][] => {
@@ -98,22 +109,22 @@ const GrindKanjiGrind = () => {
 
   // --- Data Fetching ---
   useEffect(() => {
-    const fetchData = async () => {
+    const processData = () => {
       setIsLoading(true);
       const allPartedKanjis: string[][][] = [];
       const allPartedHints: string[][][] = [];
-      for (const path of KANJI_FILE_PATHS) {
+
+      for (const key of KANJI_DATA_KEYS) {
         try {
-          const response = await fetch(path);
-          const csvText = await response.text();
-          const data = Papa.parse(csvText, { skipEmptyLines: true })
-            .data as string[][];
-          const kanjis = data.map((row: string[]) => row[0]);
-          const hints = data.map((row: string[]) => row[1]);
+          const data: KanjiEntry[] = kanjiData[key as keyof typeof kanjiData];
+
+          // Extract kanji and meanings from data structure
+          const kanjis = data.map((item: KanjiEntry) => item.kanji);
+          const hints = data.map((item: KanjiEntry) => item.meaning);
           allPartedKanjis.push(partition(kanjis, PART_SIZE));
           allPartedHints.push(partition(hints, PART_SIZE));
         } catch (error) {
-          console.error(`Failed to load or parse ${path}:`, error);
+          console.error(`Failed to process ${key}:`, error);
           allPartedKanjis.push([]);
           allPartedHints.push([]);
         }
@@ -122,7 +133,7 @@ const GrindKanjiGrind = () => {
       setPartedHints(allPartedHints);
       setIsLoading(false);
     };
-    fetchData();
+    processData();
   }, []);
 
   // --- Deck Update Logic ---
@@ -135,10 +146,13 @@ const GrindKanjiGrind = () => {
         setParts(newParts);
         setCurrentKanjiList(partedKanjis[levelIndex][partIndex]);
         setCurrentHintList(partedHints[levelIndex][partIndex]);
-        setCurrentHintPos(0);
+        // In review mode, start with no selection (-1 means no kanji selected)
+        setCurrentHintPos(selectedMode === "review" ? -1 : 0);
+        // Reset button states when deck changes
+        setButtonStates({});
       }
     },
-    [partedKanjis, partedHints]
+    [partedKanjis, partedHints, selectedMode]
   );
 
   useEffect(() => {
@@ -161,6 +175,18 @@ const GrindKanjiGrind = () => {
   const handlePartChange = (part: string) => {
     setSelectedPart(part);
   };
+  const handleModeChange = (mode: string) => {
+    setSelectedMode(mode);
+    if (mode === "review") {
+      setIsTimerRunning(false);
+      setButtonStates({});
+      // Reset hint position to no selection in review mode
+      setCurrentHintPos(-1);
+    } else {
+      // In timer mode, start with first kanji selected
+      setCurrentHintPos(0);
+    }
+  };
   const shuffleDeck = () => {
     const merged = currentKanjiList.map((kanji, i) => [
       kanji,
@@ -169,9 +195,14 @@ const GrindKanjiGrind = () => {
     merged.sort(() => Math.random() - 0.5);
     setCurrentKanjiList(merged.map((item) => item[0]));
     setCurrentHintList(merged.map((item) => item[1]));
+    // Reset button states when shuffling
+    setButtonStates({});
   };
   const handleNavArrow = useCallback(
     (direction: number) => {
+      // Disable navigation in review mode
+      if (selectedMode === "review") return;
+
       const len = currentHintList.length;
       if (len === 0) return;
       setCurrentHintPos((prev) => {
@@ -187,10 +218,41 @@ const GrindKanjiGrind = () => {
         return newPos;
       });
     },
-    [currentHintList.length, isTimerRunning, quizOrder, solvedPositions]
+    [
+      currentHintList.length,
+      isTimerRunning,
+      quizOrder,
+      solvedPositions,
+      selectedMode,
+    ]
   );
 
   const characterButtonClicked = (clickedKanjiIndex: number) => {
+    if (selectedMode === "review") {
+      // Review mode: cycle through button states and move hint to selected kanji
+      setButtonStates((prev) => {
+        const currentState = prev[clickedKanjiIndex] || "default";
+        let newState: "default" | "green" | "red";
+
+        if (currentState === "default") {
+          newState = "green";
+        } else if (currentState === "green") {
+          newState = "red";
+        } else {
+          newState = "default";
+        }
+
+        return {
+          ...prev,
+          [clickedKanjiIndex]: newState,
+        };
+      });
+      // Move hint to show the clicked kanji's meaning
+      setCurrentHintPos(clickedKanjiIndex);
+      return;
+    }
+
+    // Timer mode logic (existing)
     if (!isTimerRunning) {
       setCurrentHintPos(clickedKanjiIndex);
       return;
@@ -232,6 +294,11 @@ const GrindKanjiGrind = () => {
   };
   const restartQuiz = () => setIsTimerRunning(false);
 
+  // Calculate review mode score
+  const reviewScore = Object.values(buttonStates).filter(
+    (state) => state === "green"
+  ).length;
+
   // --- Effects ---
   useEffect(() => {
     let interval: NodeJS.Timeout | undefined;
@@ -260,6 +327,8 @@ const GrindKanjiGrind = () => {
   }
   const displayHint = isTimerRunning
     ? currentHintList[quizOrder[currentHintPos]]
+    : selectedMode === "review" && currentHintPos === -1
+    ? "Click the kanji reveal its meaning"
     : currentHintList[currentHintPos];
 
   return (
@@ -312,7 +381,7 @@ const GrindKanjiGrind = () => {
           background: none;
           border: none;
           color: white;
-          font-size: clamp(1rem, 3vmin, 1.5rem);
+          // font-size: clamp(1rem, 3vmin, 1.5rem);
           padding: 0.5rem;
           line-height: 1;
           border-radius: 5px;
@@ -382,12 +451,7 @@ const GrindKanjiGrind = () => {
           align-items: center;
           padding: 0;
         }
-        .kanji-button:hover:not(:disabled) {
-          background-color: #3a3a3a;
-          transform: scale(1.05);
-          z-index: 10;
-          position: relative;
-        }
+
         .kanji-button:disabled {
           background-color: #ff0000;
           cursor: not-allowed;
@@ -401,6 +465,16 @@ const GrindKanjiGrind = () => {
           background-color: #1d8500;
           color: white;
           opacity: 1;
+        }
+
+        /* Review mode button states */
+        .kanji-button.review-green {
+          background-color: #1d8500;
+          color: white;
+        }
+        .kanji-button.review-red {
+          background-color: #cc0000;
+          color: white;
         }
 
         /* Font Family Definitions */
@@ -495,13 +569,28 @@ const GrindKanjiGrind = () => {
             </button>
           </div>
           <div className="quiz-controls">
+            <select
+              className="select-style"
+              value={selectedMode}
+              onChange={(e) => handleModeChange(e.target.value)}
+            >
+              {Object.entries(MODES).map(([key, name]) => (
+                <option key={key} value={key}>
+                  {name}
+                </option>
+              ))}
+            </select>
             <div className="score">
-              {isTimerRunning
+              {selectedMode === "timer" && isTimerRunning
                 ? `${score} / ${currentHintList.length}`
+                : selectedMode === "review"
+                ? `${reviewScore} / ${currentHintList.length}`
                 : "- / -"}
             </div>
-            <div className="timer">{formatTime(timerValue)}</div>
-            {!isTimerRunning ? (
+            {selectedMode === "timer" && (
+              <div className="timer">{formatTime(timerValue)}</div>
+            )}
+            {selectedMode === "timer" && !isTimerRunning ? (
               <button
                 onClick={startQuiz}
                 className="icon-button"
@@ -509,7 +598,7 @@ const GrindKanjiGrind = () => {
               >
                 <FaPlay size="1.5em" />
               </button>
-            ) : (
+            ) : selectedMode === "timer" && isTimerRunning ? (
               <button
                 onClick={restartQuiz}
                 className="icon-button"
@@ -517,27 +606,31 @@ const GrindKanjiGrind = () => {
               >
                 <FaRedo size="1.5em" />
               </button>
-            )}
+            ) : null}
           </div>
         </header>
 
         <main className="main-content">
           <div className="main-display">
-            <button
-              onClick={() => handleNavArrow(-1)}
-              className="icon-button"
-              title="Previous Hint"
-            >
-              <FaArrowLeft />
-            </button>
+            {selectedMode !== "review" && (
+              <button
+                onClick={() => handleNavArrow(-1)}
+                className="icon-button"
+                title="Previous Hint"
+              >
+                <FaArrowLeft />
+              </button>
+            )}
             <div className="hint-text">{displayHint || "..."}</div>
-            <button
-              onClick={() => handleNavArrow(1)}
-              className="icon-button"
-              title="Next Hint"
-            >
-              <FaArrowRight />
-            </button>
+            {selectedMode !== "review" && (
+              <button
+                onClick={() => handleNavArrow(1)}
+                className="icon-button"
+                title="Next Hint"
+              >
+                <FaArrowRight />
+              </button>
+            )}
           </div>
           <div className="grid-wrapper">
             <div className="kanji-grid">
@@ -546,10 +639,32 @@ const GrindKanjiGrind = () => {
                   key={index}
                   id={`kanji-button-${index}`}
                   className={`kanji-button ${
-                    !isTimerRunning && currentHintPos === index ? "active" : ""
+                    selectedMode === "timer" &&
+                    !isTimerRunning &&
+                    currentHintPos === index
+                      ? "active"
+                      : ""
+                  } ${
+                    selectedMode === "timer" &&
+                    isTimerRunning &&
+                    solvedPositions.includes(index)
+                      ? "correct"
+                      : ""
+                  } ${
+                    selectedMode === "review" && buttonStates[index] === "green"
+                      ? "review-green"
+                      : ""
+                  } ${
+                    selectedMode === "review" && buttonStates[index] === "red"
+                      ? "review-red"
+                      : ""
                   }`}
                   onClick={() => characterButtonClicked(index)}
-                  disabled={isTimerRunning && solvedPositions.includes(index)}
+                  disabled={
+                    selectedMode === "timer" &&
+                    isTimerRunning &&
+                    solvedPositions.includes(index)
+                  }
                 >
                   {kanji}
                 </button>
