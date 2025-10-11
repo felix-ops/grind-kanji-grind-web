@@ -85,6 +85,10 @@ const GrindKanjiGrind = () => {
   const [score, setScore] = useState(0);
   const [quizOrder, setQuizOrder] = useState<number[]>([]);
   const [solvedPositions, setSolvedPositions] = useState<number[]>([]);
+  // NEW STATE: Tracks if the kanji index (0-N) was the correct/failed answer for a question
+  const [quizStatus, setQuizStatus] = useState<
+    Record<number, "correct" | "failed">
+  >({});
   const [isLoading, setIsLoading] = useState(true);
 
   // Review Mode State
@@ -269,17 +273,29 @@ const GrindKanjiGrind = () => {
       setCurrentHintPos(clickedKanjiIndex);
       return;
     }
+
+    // The index of the correct kanji (in the original list) for the current question
     const correctKanjiIndex = quizOrder[currentHintPos];
+
     if (solvedPositions.includes(correctKanjiIndex)) return;
+
+    let status: "correct" | "failed";
     if (correctKanjiIndex === clickedKanjiIndex) {
+      // CORRECT ANSWER
       setScore((prev) => prev + 1);
-      const button = document.getElementById(
-        `kanji-button-${clickedKanjiIndex}`
-      );
-      if (button) {
-        button.classList.add("correct");
-      }
+      status = "correct";
+    } else {
+      // INCORRECT ANSWER: The correct kanji for this question is now "failed"
+      status = "failed";
     }
+
+    // Update status of the correct kanji for the current question
+    setQuizStatus((prev) => ({
+      ...prev,
+      [correctKanjiIndex]: status,
+    }));
+
+    // CORE FUNCTIONALITY: Unconditionally mark as solved (the question) and advance
     const newSolved = [...solvedPositions, correctKanjiIndex];
     setSolvedPositions(newSolved);
     if (newSolved.length === currentHintList.length) {
@@ -288,6 +304,7 @@ const GrindKanjiGrind = () => {
       handleNavArrow(1);
     }
   };
+
   const startQuiz = () => {
     setIsTimerRunning(true);
     const newQuizOrder = Array.from(
@@ -298,10 +315,12 @@ const GrindKanjiGrind = () => {
     setCurrentHintPos(0);
     setScore(0);
     setSolvedPositions([]);
+    setQuizStatus({}); // <-- Reset quiz status
     setTimerValue(900);
+    // Remove old styles just in case
     const buttons = document.querySelectorAll(".kanji-button");
     buttons.forEach((button) => {
-      button.classList.remove("correct");
+      button.classList.remove("correct", "failed"); // <-- Ensure failed is also removed
     });
   };
   const restartQuiz = () => setIsTimerRunning(false);
@@ -474,7 +493,13 @@ const GrindKanjiGrind = () => {
           border-color: #888;
         }
         .kanji-button.correct {
-          background-color: #1d8500;
+          background-color: #1d8500; /* Green */
+          color: white;
+          opacity: 1;
+        }
+        /* NEW: Red style for correct kanji on a failed question */
+        .kanji-button.failed {
+          background-color: #cc0000; /* Red */
           color: white;
           opacity: 1;
         }
@@ -657,12 +682,15 @@ const GrindKanjiGrind = () => {
                       ? "active"
                       : ""
                   } ${
-                    selectedMode === "timer" &&
-                    isTimerRunning &&
-                    solvedPositions.includes(index)
+                    // Timer Mode Status (NEW LOGIC)
+                    selectedMode === "timer" && quizStatus[index] === "correct"
                       ? "correct"
+                      : selectedMode === "timer" &&
+                        quizStatus[index] === "failed"
+                      ? "failed"
                       : ""
                   } ${
+                    // Review Mode Status
                     selectedMode === "review" && buttonStates[index] === "green"
                       ? "review-green"
                       : ""
@@ -675,7 +703,9 @@ const GrindKanjiGrind = () => {
                   disabled={
                     selectedMode === "timer" &&
                     isTimerRunning &&
-                    solvedPositions.includes(index)
+                    // Disable if the question associated with this kanji has been completed (correct or failed)
+                    (quizStatus[index] === "correct" ||
+                      quizStatus[index] === "failed")
                   }
                 >
                   {kanji}
