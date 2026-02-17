@@ -28616,11 +28616,11 @@ export const kanjiData: KanjiData = {
     },
     {
       kanji: "ぢ",
-      meaning: "ji (Rarely used form)",
+      meaning: "ji (Rarely used pronunciation)",
     },
     {
       kanji: "づ",
-      meaning: "dzu (Rarely used form)",
+      meaning: "dzu",
     },
     {
       kanji: "で",
@@ -28902,11 +28902,11 @@ export const kanjiData: KanjiData = {
     },
     {
       kanji: "ヂ",
-      meaning: "ji (Rarely used form)",
+      meaning: "ji (Rarely used pronunciation)",
     },
     {
       kanji: "ヅ",
-      meaning: "dzu (Rarely used form)",
+      meaning: "dzu",
     },
     {
       kanji: "デ",
